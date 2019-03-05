@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
 MAINTAINER Waleed Abdulla <waleed.abdulla@gmail.com>
 
 # Supress warnings about missing front-end. As recommended at:
@@ -34,17 +34,17 @@ RUN pip3 --no-cache-dir install \
 # NOTE: disable authentication token for convenience. DON'T DO THIS ON A PUBLIC SERVER.
 RUN pip3 --no-cache-dir install jupyter && \
     mkdir /root/.jupyter && \
-    echo "c.NotebookApp.ip = '*'" \
+    echo "c.NotebookApp.ip = '0.0.0.0'" \
+         "\nc.NotebookApp.allow_origin = '*'" \
          "\nc.NotebookApp.open_browser = False" \
          "\nc.NotebookApp.token = ''" \
          > /root/.jupyter/jupyter_notebook_config.py
 EXPOSE 8888
 
 #
-# Tensorflow 1.6.0 - CPU
+# Tensorflow 1.6.0 - GPU
 #
-RUN pip3 install --no-cache-dir --upgrade tensorflow 
-
+RUN pip3 install --no-cache-dir --upgrade tensorflow-gpu==1.13.1
 # Expose port for TensorBoard
 EXPOSE 6006
 
