@@ -119,8 +119,25 @@ RUN pip3 install http://download.pytorch.org/whl/cpu/torch-0.3.1-cp35-cp35m-linu
 # but it doesn't seem to be active anymore.
 RUN pip3 install --no-cache-dir git+https://github.com/waleedka/coco.git#subdirectory=PythonAPI
 
-WORKDIR "/root"
-CMD ["/bin/bash"]
-
 # Fix for Jupyter notebook, ref: https://github.com/jupyter/notebook/issues/2664#issuecomment-469048101
 RUN pip3 --no-cache-dir install tornado==5.1.1
+
+#Include Mask RCNN
+# Pillow and it's dependencies
+RUN apt-get install -y --no-install-recommends libjpeg-dev zlib1g-dev && \
+    pip3 --no-cache-dir install Pillow
+# Science libraries and other common packages
+RUN pip3 --no-cache-dir install \
+    numpy scipy sklearn scikit-image pandas matplotlib Cython requests
+
+#For creation of PDF
+# RUN pip3 --no-cache-dir install \
+#     nbconvert
+
+RUN cd /home && git clone https://github.com/matterport/Mask_RCNN.git
+
+RUN cd /home/Mask_RCNN && git checkout 1ad9feaae3d87b52495413e6c8ea0e92f0e5bc34 && pip3 install -r requirements.txt && python3 setup.py install
+
+
+WORKDIR "/root"
+CMD ["/bin/bash"]
