@@ -121,3 +121,6 @@ RUN pip3 install --no-cache-dir git+https://github.com/waleedka/coco.git#subdire
 
 WORKDIR "/root"
 CMD ["/bin/bash"]
+
+# Fix for Jupyter notebook, ref: https://github.com/jupyter/notebook/issues/2664#issuecomment-469048101
+RUN pip3 --no-cache-dir install tornado==5.1.1
